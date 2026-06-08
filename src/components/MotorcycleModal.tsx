@@ -50,13 +50,15 @@ export default function MotorcycleModal({
       className={`fixed inset-0 flex items-center justify-center z-50
                   bg-black/0 md:bg-black/70 backdrop-blur-sm transition-all duration-300
                   ${isOpen ? "bg-black/70 opacity-100" : "bg-black/0 opacity-0"}`}
+      style={{ touchAction: "none" }}
       onClick={onClose} // click outside closes modal
     >
       {/* ------------------ Modal Box ------------------ */}
       <div
         className={`bg-white w-11/12 sm:w-10/12 md:w-full md:max-w-[1100px] lg:max-w-[1200px] rounded-lg relative flex flex-col
                     md:grid md:grid-cols-[1fr_1.1fr_1fr] lg:grid-cols-[1fr_1.2fr_1fr] xl:grid-cols-[0.95fr_1.2fr_1fr]
-                    h-[92dvh] md:h-auto max-h-[92dvh] md:max-h-full overflow-hidden transform transition-all duration-300
+                    h-[92svh] md:h-auto max-h-[92svh] md:max-h-full overflow-hidden transform transition-all duration-300
+                    overscroll-contain
                     ${isOpen ? "scale-100 opacity-100" : "scale-95 opacity-0"}`}
         onClick={(e) => e.stopPropagation()} // prevent outside click from closing
       >
