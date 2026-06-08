@@ -102,10 +102,10 @@ function MotorcycleModalContent({
       <div
         className={`bg-white w-11/12 sm:w-10/12 md:w-full md:max-w-[1100px] lg:max-w-[1200px] rounded-lg relative flex flex-col
                     md:grid md:grid-cols-[1fr_1.1fr_1fr] lg:grid-cols-[1fr_1.2fr_1fr] xl:grid-cols-[0.95fr_1.2fr_1fr]
-                    md:h-auto md:max-h-full overflow-hidden transform transition-all duration-300
+                    h-auto md:h-auto md:max-h-full overflow-hidden md:overflow-hidden transform transition-all duration-300
                     overscroll-contain
                     scale-100 opacity-100`}
-        style={mobileModalHeight ? { height: mobileModalHeight, maxHeight: mobileModalHeight } : undefined}
+        style={mobileModalHeight ? { maxHeight: mobileModalHeight } : undefined}
         onClick={(e) => e.stopPropagation()} // prevent outside click from closing
       >
         {/* Close Button */}
@@ -128,7 +128,7 @@ function MotorcycleModalContent({
 
         {/* ------------------ COLUMN 2 (Details) ------------------ */}
         <div
-          className={`w-full px-3 py-2 md:p-4 flex-1 min-h-0 md:min-h-auto
+          className={`w-full px-3 py-2 md:p-4 md:flex-1 min-h-0 md:min-h-auto
                       overflow-y-auto md:overflow-hidden transition-all duration-500 ease-out
                       opacity-100 translate-y-0`}
           style={{ touchAction: "pan-y" }}
@@ -198,12 +198,12 @@ function MotorcycleModalContent({
 
             {/* Flipped duplicate below */}
             {block && (
-              <div className="relative w-full max-w-[280px] sm:max-w-[340px] md:max-w-full h-full min-h-[90px] sm:min-h-[110px] md:min-h-[190px] lg:min-h-[220px] overflow-hidden -scale-x-100">
+              <div className="relative w-full max-w-[300px] sm:max-w-[360px] md:max-w-full h-full min-h-[100px] sm:min-h-[120px] md:min-h-[210px] lg:min-h-[240px] overflow-hidden -scale-x-100">
                 <ModalImage
                   key={`${block}-flip`}
                   src={block}
                   alt={`${title} flipped`}
-                  className="object-contain object-center scale-105 sm:scale-110 md:scale-95 lg:scale-100 opacity-50 sm:opacity-70 drop-shadow-[0_4px_4px_rgba(0,0,0,0.2)]"
+                  className="object-contain object-center scale-110 sm:scale-115 md:scale-100 lg:scale-105 opacity-50 sm:opacity-70 md:hover:scale-[1.12] will-change-transform drop-shadow-[0_4px_4px_rgba(0,0,0,0.2)]"
                 />
               </div>
             )}
