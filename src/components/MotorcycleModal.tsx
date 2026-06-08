@@ -64,44 +64,48 @@ export default function MotorcycleModal({
   block,
   techSpecs,
 }: MotorcycleModalProps) {
-  // Handle page scroll lock while modal is open
-  useEffect(() => {
-    if (isOpen) {
-      // Stop background scrolling while the modal is open.
-      document.body.style.overflow = "hidden";
-    } else {
-      // Restore background scrolling when closing
-      document.body.style.overflow = "auto";
-    }
+  if (!isOpen) return null;
+  return <MotorcycleModalContent {...{ onClose, title, price, video, block, techSpecs }} />;
+}
 
-    return undefined;
-  }, [isOpen]);
+function MotorcycleModalContent({
+  onClose,
+  title,
+  price,
+  video,
+  block,
+  techSpecs,
+}: Omit<MotorcycleModalProps, "isOpen">) {
+  const [lockedHeight] = useState(() =>
+    typeof window !== "undefined" ? Math.round(window.innerHeight * 0.92) : null
+  );
+  const mobileModalHeight = lockedHeight;
 
-  // Cleanup in case modal unmounts
+  // Lock body scroll while modal is open; restore on unmount
   useEffect(() => {
+    document.body.style.overflow = "hidden";
     return () => {
       document.body.style.overflow = "auto";
     };
   }, []);
 
-  if (!isOpen) return null;
-
   return (
     // ------------------ Overlay ------------------
     <div
       className={`fixed inset-0 flex items-center justify-center z-50
-                  bg-black/0 md:bg-black/70 backdrop-blur-sm transition-all duration-300
-                  ${isOpen ? "bg-black/70 opacity-100" : "bg-black/0 opacity-0"}`}
+                  bg-black/70 opacity-100 backdrop-blur-sm`}
       style={{ touchAction: "none" }}
+      onTouchMove={(e) => e.preventDefault()}
       onClick={onClose} // click outside closes modal
     >
       {/* ------------------ Modal Box ------------------ */}
       <div
         className={`bg-white w-11/12 sm:w-10/12 md:w-full md:max-w-[1100px] lg:max-w-[1200px] rounded-lg relative flex flex-col
                     md:grid md:grid-cols-[1fr_1.1fr_1fr] lg:grid-cols-[1fr_1.2fr_1fr] xl:grid-cols-[0.95fr_1.2fr_1fr]
-                    h-[92svh] md:h-auto max-h-[92svh] md:max-h-full overflow-hidden transform transition-all duration-300
+                    md:h-auto md:max-h-full overflow-hidden transform transition-all duration-300
                     overscroll-contain
-                    ${isOpen ? "scale-100 opacity-100" : "scale-95 opacity-0"}`}
+                    scale-100 opacity-100`}
+        style={mobileModalHeight ? { height: mobileModalHeight, maxHeight: mobileModalHeight } : undefined}
         onClick={(e) => e.stopPropagation()} // prevent outside click from closing
       >
         {/* Close Button */}
@@ -116,7 +120,7 @@ export default function MotorcycleModal({
         <div
           className={`w-full px-3 py-2 md:p-4 bg-black shrink-0 h-[120px] sm:h-[160px] md:h-auto
                       overflow-hidden transition-all duration-500 ease-out
-                      ${isOpen ? "opacity-100 translate-y-0" : "opacity-0 translate-y-2"}`}
+                      opacity-100 translate-y-0`}
         >
           {/* Video */}
           {video && <ModalVideo key={video} src={video} />}
@@ -126,7 +130,9 @@ export default function MotorcycleModal({
         <div
           className={`w-full px-3 py-2 md:p-4 flex-1 min-h-0 md:min-h-auto
                       overflow-y-auto md:overflow-hidden transition-all duration-500 ease-out
-                      ${isOpen ? "opacity-100 translate-y-0" : "opacity-0 translate-y-2"}`}
+                      opacity-100 translate-y-0`}
+          style={{ touchAction: "pan-y" }}
+          onTouchMove={(e) => e.stopPropagation()}
         >
           <h2 className="text-lg sm:text-xl md:text-2xl font-bold text-black leading-tight">{title}</h2>
           <p className="text-red-600 font-semibold mb-2 md:mb-4 text-sm md:text-base">{price}</p>
@@ -174,7 +180,7 @@ export default function MotorcycleModal({
         <div
           className={`w-full bg-gray-100 flex flex-col items-center md:justify-center px-3 pt-2 pb-1 md:p-4 md:pb-2 shrink-0 h-[230px] sm:h-[260px] md:h-auto
                       overflow-hidden transition-all duration-500 ease-out
-                      ${isOpen ? "opacity-100 translate-y-0" : "opacity-0 translate-y-2"}`}
+                      opacity-100 translate-y-0`}
         >
           {/* Image Wrapper */}
           <div className="grid grid-rows-[1.05fr_0.95fr] w-full h-full gap-0 md:gap-2 justify-items-center items-center">
