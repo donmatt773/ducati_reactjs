@@ -95,7 +95,10 @@ export default function Header() {
   };
 
   const handleEnded = () => {
-    if (isMobile) return;
+    if (isMobile) {
+      setCurrentIndex((prev) => (prev + 1) % videos.length);
+      return;
+    }
     startTransitionToNext();
   };
 
@@ -107,8 +110,8 @@ export default function Header() {
         autoPlay
         muted
         playsInline
-        loop={isMobile}
-        src={videos[isMobile ? 0 : currentIndex]}
+        loop={false}
+        src={videos[currentIndex]}
         onLoadedData={handleLoadedData}
         onEnded={handleEnded}
         className={`absolute top-0 left-0 w-full h-full object-cover transition-opacity duration-700 ${
