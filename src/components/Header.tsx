@@ -12,13 +12,13 @@ const videos = [
 
 export default function Header() {
   const [currentIndex, setCurrentIndex] = useState(0);
-  const [fade, setFade] = useState(false);
   const [isMobile, setIsMobile] = useState(false);
+  const [isFading, setIsFading] = useState(false);
 
   const currentRef = useRef<HTMLVideoElement | null>(null);
-  const nextRef = useRef<HTMLVideoElement | null>(null);
-
-  const CROSSFADE_DURATION = 100; // fade duration in ms
+  const isTransitioningRef = useRef(false);
+  const switchTimeoutRef = useRef<number | null>(null);
+  const FADE_DURATION_MS = 700;
 
   const safePlay = (video: HTMLVideoElement) => {
     const playPromise = video.play();
@@ -38,6 +38,14 @@ export default function Header() {
     return () => media.removeEventListener("change", handleChange);
   }, []);
 
+  useEffect(() => {
+    return () => {
+      if (switchTimeoutRef.current !== null) {
+        window.clearTimeout(switchTimeoutRef.current);
+      }
+    };
+  }, []);
+
   // Preload all videos
   useEffect(() => {
     if (isMobile) return;
@@ -49,35 +57,64 @@ export default function Header() {
     });
   }, [isMobile]);
 
-  // Handle video end to switch to the next
+  // Ensure the currently selected video starts when source changes.
   useEffect(() => {
     if (isMobile) return;
 
     const currentVideo = currentRef.current;
     if (!currentVideo) return;
 
+    isTransitioningRef.current = false;
     currentVideo.currentTime = 0;
     safePlay(currentVideo);
-
-    const handleEnded = () => {
-      setFade(true); // start crossfade
-      setTimeout(() => {
-        setCurrentIndex((prev) => (prev + 1) % videos.length);
-        setFade(false);
-
-        if (nextRef.current) {
-          nextRef.current.currentTime = 0;
-          safePlay(nextRef.current);
-        }
-        currentVideo.pause();
-        currentVideo.currentTime = 0;
-      }, CROSSFADE_DURATION);
-    };
-
-    currentVideo.addEventListener("ended", handleEnded);
-
-    return () => currentVideo.removeEventListener("ended", handleEnded);
   }, [currentIndex, isMobile]);
+
+  const startTransitionToNext = () => {
+    if (isMobile || isTransitioningRef.current) return;
+
+    isTransitioningRef.current = true;
+    setIsFading(true);
+
+    if (switchTimeoutRef.current !== null) {
+      window.clearTimeout(switchTimeoutRef.current);
+    }
+
+    switchTimeoutRef.current = window.setTimeout(() => {
+      setCurrentIndex((prev) => (prev + 1) % videos.length);
+    }, FADE_DURATION_MS);
+  };
+
+  const handleTimeUpdate = () => {
+    if (isMobile || isTransitioningRef.current) return;
+
+    const currentVideo = currentRef.current;
+    if (!currentVideo || !Number.isFinite(currentVideo.duration)) return;
+
+    const remaining = currentVideo.duration - currentVideo.currentTime;
+    if (remaining <= FADE_DURATION_MS / 1000) {
+      startTransitionToNext();
+    }
+  };
+
+  const handleLoadedData = () => {
+    const currentVideo = currentRef.current;
+    if (!currentVideo) return;
+
+    safePlay(currentVideo);
+
+    if (!isMobile) {
+      // Fade in the newly loaded source after the index swap.
+      requestAnimationFrame(() => setIsFading(false));
+    }
+  };
+
+  const handleEnded = () => {
+    if (isMobile) return;
+
+    if (!isTransitioningRef.current) {
+      setCurrentIndex((prev) => (prev + 1) % videos.length);
+    }
+  };
 
   return (
     <section className="relative min-h-[100svh] md:h-screen w-full max-w-full pt-24 md:pt-0 flex items-center justify-center text-center text-white overflow-hidden">
@@ -89,29 +126,15 @@ export default function Header() {
         muted
         playsInline
         loop={isMobile}
-        className={`absolute top-0 left-0 w-full h-full object-cover transition-opacity duration-1000 ${
-          fade ? "opacity-0" : "opacity-100"
+        onTimeUpdate={handleTimeUpdate}
+        onLoadedData={handleLoadedData}
+        onEnded={handleEnded}
+        className={`absolute top-0 left-0 w-full h-full object-cover transition-opacity duration-700 ${
+          isFading ? "opacity-0" : "opacity-100"
         } ${isMobile ? "" : "animate-zoom"}`}
       >
         <source src={videos[isMobile ? 0 : currentIndex]} type="video/mp4" />
       </video>
-
-      {/* Next Video (for crossfade) */}
-      {!isMobile && (
-        <video
-          ref={nextRef}
-          key={(currentIndex + 1) % videos.length}
-          autoPlay
-          muted
-          playsInline
-          loop={false}
-          className={`absolute top-0 left-0 w-full h-full object-cover transition-opacity duration-1000 ${
-            fade ? "opacity-100" : "opacity-0"
-          } animate-zoom`}
-        >
-          <source src={videos[(currentIndex + 1) % videos.length]} type="video/mp4" />
-        </video>
-      )}
 
       {/* Dark overlay */}
       <div className="absolute top-0 left-0 w-full h-full bg-black/70"></div>
