@@ -1,16 +1,25 @@
-# React + Vite
+# Ducati Website (Next.js + TypeScript)
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+This project has been migrated from Vite React to Next.js App Router with TypeScript.
 
-Currently, two official plugins are available:
+## Scripts
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Babel](https://babeljs.io/) (or [oxc](https://oxc.rs) when used in [rolldown-vite](https://vite.dev/guide/rolldown)) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+- `npm run dev` - Start the Next.js development server
+- `npm run dev:clean` - Clear `.next` and start dev server (recommended if runtime chunks get corrupted)
+- `npm run build` - Create a production build
+- `npm run start` - Run the production server
+- `npm run start:clean` - Clear `.next`, rebuild, and run production server
+- `npm run lint` - Run ESLint
+- `npm run typecheck` - Run TypeScript checks
 
-## React Compiler
+## Node Version
 
-The React Compiler is not enabled on this template because of its impact on dev & build performances. To add it, see [this documentation](https://react.dev/learn/react-compiler/installation).
+- Use Node.js 20 or 22 LTS for best Next.js stability.
+- `.nvmrc` is set to `22`.
 
-## Expanding the ESLint configuration
+## Stack
 
-If you are developing a production application, we recommend using TypeScript with type-aware lint rules enabled. Check out the [TS template](https://github.com/vitejs/vite/tree/main/packages/create-vite/template-react-ts) for information on how to integrate TypeScript and [`typescript-eslint`](https://typescript-eslint.io) in your project.
+- Next.js (App Router)
+- React 19
+- TypeScript
+- Tailwind CSS v4
