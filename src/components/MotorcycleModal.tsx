@@ -70,13 +70,13 @@ export default function MotorcycleModal({
 
         {/* ------------------ COLUMN 1 (Video) ------------------ */}
         <div
-          className={`w-full px-3 py-2 md:p-4 bg-black
+          className={`w-full px-3 py-2 md:p-4 bg-black shrink-0 h-[120px] sm:h-[160px] md:h-auto
                       overflow-hidden transition-all duration-500 ease-out
                       ${isOpen ? "opacity-100 translate-y-0" : "opacity-0 translate-y-2"}`}
         >
           {/* Video */}
           {video && (
-            <video autoPlay muted loop playsInline className="w-full rounded h-[130px] sm:h-[180px] md:h-full md:min-h-[420px] object-cover">
+            <video autoPlay muted loop playsInline className="w-full rounded h-full md:h-full md:min-h-[420px] object-cover">
               <source src={video} type="video/mp4" />
             </video>
           )}
@@ -84,14 +84,10 @@ export default function MotorcycleModal({
 
         {/* ------------------ COLUMN 2 (Details) ------------------ */}
         <div
-          className={`w-full px-3 py-2 md:p-4
-                      overflow-hidden transition-all duration-500 ease-out
+          className={`w-full px-3 py-2 md:p-4 flex-1 min-h-0 md:min-h-auto
+                      overflow-y-auto md:overflow-hidden transition-all duration-500 ease-out
                       ${isOpen ? "opacity-100 translate-y-0" : "opacity-0 translate-y-2"}`}
         >
-          {/* Fade indicators for mobile scroll */}
-          <div className="absolute top-0 left-0 w-full h-6 bg-gradient-to-b from-white pointer-events-none z-10 md:hidden"></div>
-          <div className="absolute bottom-0 left-0 w-full h-6 bg-gradient-to-t from-white pointer-events-none z-10 md:hidden"></div>
-
           <h2 className="text-lg sm:text-xl md:text-2xl font-bold text-black leading-tight">{title}</h2>
           <p className="text-red-600 font-semibold mb-2 md:mb-4 text-sm md:text-base">{price}</p>
 
@@ -136,38 +132,34 @@ export default function MotorcycleModal({
 
         {/* ------------------ COLUMN 3 (Images) ------------------ */}
         <div
-          className={`w-full bg-gray-100 flex flex-col items-center md:justify-center px-3 pt-2 pb-0 md:p-4 md:pb-2
+          className={`w-full bg-gray-100 flex flex-col items-center md:justify-center px-3 pt-2 pb-1 md:p-4 md:pb-2 shrink-0 h-[230px] sm:h-[260px] md:h-auto
                       overflow-hidden transition-all duration-500 ease-out
                       ${isOpen ? "opacity-100 translate-y-0" : "opacity-0 translate-y-2"}`}
         >
-          {/* Mobile fade indicators */}
-          <div className="absolute top-0 left-0 w-full h-6 bg-gradient-to-b from-gray-100 pointer-events-none z-10 md:hidden"></div>
-          <div className="absolute bottom-0 left-0 w-full h-6 bg-gradient-to-t from-gray-100 pointer-events-none z-10 md:hidden"></div>
-
           {/* Image Wrapper */}
           <div className="grid grid-rows-[1.05fr_0.95fr] w-full h-full gap-0 md:gap-2 justify-items-center items-center">
             {/* Original block image */}
             {block && (
-              <div className="relative w-full max-w-[320px] sm:max-w-[410px] md:max-w-full h-full min-h-[180px] md:min-h-[210px] lg:min-h-[240px]">
+              <div className="relative w-full max-w-[300px] sm:max-w-[360px] md:max-w-full h-full min-h-[100px] sm:min-h-[120px] md:min-h-[210px] lg:min-h-[240px]">
                 <Image
                   src={block}
                   alt={title}
                   fill
                   sizes="(max-width: 640px) 64vw, (max-width: 1024px) 42vw, 33vw"
-                  className="object-contain object-center scale-[1.38] md:scale-100 lg:scale-105 hover:scale-[1.12] transition duration-300"
+                  className="object-contain object-center scale-110 sm:scale-115 md:scale-100 lg:scale-105 hover:scale-[1.12] transition duration-300"
                 />
               </div>
             )}
 
             {/* Flipped duplicate below */}
             {block && (
-              <div className="relative w-full max-w-[300px] sm:max-w-[390px] md:max-w-full h-full min-h-[170px] md:min-h-[190px] lg:min-h-[220px] overflow-hidden -scale-x-100">
+              <div className="relative w-full max-w-[280px] sm:max-w-[340px] md:max-w-full h-full min-h-[90px] sm:min-h-[110px] md:min-h-[190px] lg:min-h-[220px] overflow-hidden -scale-x-100">
                 <Image
                   src={block}
                   alt={`${title} flipped`}
                   fill
                   sizes="(max-width: 640px) 60vw, (max-width: 1024px) 40vw, 32vw"
-                  className={`object-contain object-center scale-[1.34] md:scale-95 lg:scale-100 opacity-50 sm:opacity-70
+                  className={`object-contain object-center scale-105 sm:scale-110 md:scale-95 lg:scale-100 opacity-50 sm:opacity-70
                              drop-shadow-[0_4px_4px_rgba(0,0,0,0.2)] transition-all duration-500 delay-150`}
                 />
               </div>

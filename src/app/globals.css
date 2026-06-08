@@ -1,5 +1,14 @@
 @import "tailwindcss";
 
+html,
+body {
+	height: 100%;
+	min-height: 100svh;
+	overscroll-behavior-y: none;
+	-webkit-text-size-adjust: 100%;
+	text-size-adjust: 100%;
+}
+
 @keyframes header-zoom {
 	0% {
 		transform: scale(1);
@@ -20,6 +29,7 @@
 	html,
 	body {
 		overflow-x: hidden;
+		overflow-y: auto;
 	}
 
 	.animate-zoom {
