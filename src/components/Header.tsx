@@ -59,13 +59,10 @@ export default function Header() {
 
   // Ensure the currently selected video starts when source changes.
   useEffect(() => {
-    if (isMobile) return;
-
     const currentVideo = currentRef.current;
     if (!currentVideo) return;
 
-    isTransitioningRef.current = false;
-    currentVideo.currentTime = 0;
+    currentVideo.load();
     safePlay(currentVideo);
   }, [currentIndex, isMobile]);
 
@@ -84,18 +81,6 @@ export default function Header() {
     }, FADE_DURATION_MS);
   };
 
-  const handleTimeUpdate = () => {
-    if (isMobile || isTransitioningRef.current) return;
-
-    const currentVideo = currentRef.current;
-    if (!currentVideo || !Number.isFinite(currentVideo.duration)) return;
-
-    const remaining = currentVideo.duration - currentVideo.currentTime;
-    if (remaining <= FADE_DURATION_MS / 1000) {
-      startTransitionToNext();
-    }
-  };
-
   const handleLoadedData = () => {
     const currentVideo = currentRef.current;
     if (!currentVideo) return;
@@ -105,15 +90,13 @@ export default function Header() {
     if (!isMobile) {
       // Fade in the newly loaded source after the index swap.
       requestAnimationFrame(() => setIsFading(false));
+      isTransitioningRef.current = false;
     }
   };
 
   const handleEnded = () => {
     if (isMobile) return;
-
-    if (!isTransitioningRef.current) {
-      setCurrentIndex((prev) => (prev + 1) % videos.length);
-    }
+    startTransitionToNext();
   };
 
   return (
@@ -121,20 +104,17 @@ export default function Header() {
       {/* Current Video */}
       <video
         ref={currentRef}
-        key={currentIndex}
         autoPlay
         muted
         playsInline
         loop={isMobile}
-        onTimeUpdate={handleTimeUpdate}
+        src={videos[isMobile ? 0 : currentIndex]}
         onLoadedData={handleLoadedData}
         onEnded={handleEnded}
         className={`absolute top-0 left-0 w-full h-full object-cover transition-opacity duration-700 ${
           isFading ? "opacity-0" : "opacity-100"
         } ${isMobile ? "" : "animate-zoom"}`}
-      >
-        <source src={videos[isMobile ? 0 : currentIndex]} type="video/mp4" />
-      </video>
+      />
 
       {/* Dark overlay */}
       <div className="absolute top-0 left-0 w-full h-full bg-black/70"></div>
