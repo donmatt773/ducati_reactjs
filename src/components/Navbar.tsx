@@ -61,7 +61,7 @@ export default function Navbar() {
 
       {/* MOBILE MENU */}
       <div
-        className={`fixed top-0 left-0 w-full h-screen bg-black flex flex-col items-center justify-center text-white text-xl gap-8 transition-transform duration-300 md:hidden transition-smooth ${
+        className={`fixed top-0 left-0 w-full h-[100svh] bg-black flex flex-col items-center justify-center text-white text-xl gap-8 transition-transform duration-300 md:hidden transition-smooth ${
           menuOpen ? "translate-x-0" : "-translate-x-full"
         }`}
       >

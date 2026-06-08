@@ -145,29 +145,29 @@ export default function MotorcycleModal({
           <div className="absolute bottom-0 left-0 w-full h-6 bg-gradient-to-t from-gray-100 pointer-events-none z-10 md:hidden"></div>
 
           {/* Image Wrapper */}
-          <div className="grid grid-rows-[1.05fr_0.95fr] w-full h-full gap-0 md:gap-1 justify-items-center items-end">
+          <div className="grid grid-rows-[1.05fr_0.95fr] w-full h-full gap-0 md:gap-2 justify-items-center items-center">
             {/* Original block image */}
             {block && (
-              <div className="relative w-full max-w-[320px] sm:max-w-[410px] md:max-w-[540px] h-full min-h-[180px] md:min-h-[280px]">
+              <div className="relative w-full max-w-[320px] sm:max-w-[410px] md:max-w-full h-full min-h-[180px] md:min-h-[210px] lg:min-h-[240px]">
                 <Image
                   src={block}
                   alt={title}
                   fill
                   sizes="(max-width: 640px) 64vw, (max-width: 1024px) 42vw, 33vw"
-                  className="object-contain object-bottom scale-[1.38] md:scale-[1.42] hover:scale-[1.46] transition duration-300"
+                  className="object-contain object-center scale-[1.38] md:scale-100 lg:scale-105 hover:scale-[1.12] transition duration-300"
                 />
               </div>
             )}
 
             {/* Flipped duplicate below */}
             {block && (
-              <div className="relative w-full max-w-[300px] sm:max-w-[390px] md:max-w-[520px] h-full min-h-[170px] md:min-h-[260px] overflow-hidden -scale-x-100">
+              <div className="relative w-full max-w-[300px] sm:max-w-[390px] md:max-w-full h-full min-h-[170px] md:min-h-[190px] lg:min-h-[220px] overflow-hidden -scale-x-100">
                 <Image
                   src={block}
                   alt={`${title} flipped`}
                   fill
                   sizes="(max-width: 640px) 60vw, (max-width: 1024px) 40vw, 32vw"
-                  className={`object-contain object-bottom scale-[1.34] md:scale-[1.4] opacity-50 sm:opacity-70
+                  className={`object-contain object-center scale-[1.34] md:scale-95 lg:scale-100 opacity-50 sm:opacity-70
                              drop-shadow-[0_4px_4px_rgba(0,0,0,0.2)] transition-all duration-500 delay-150`}
                 />
               </div>

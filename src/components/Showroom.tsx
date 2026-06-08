@@ -118,7 +118,7 @@ export default function Showroom({ selectedBike, setSelectedBike }: ShowroomProp
   return (
     <section
       id="showroom"
-      className="min-h-screen bg-cover bg-center text-white py-20"
+      className="min-h-[100svh] md:min-h-screen bg-cover bg-center text-white py-20"
       style={{
         backgroundImage:
           "linear-gradient(rgba(4,9,30,0.7), rgba(4,9,30,0.7)), url('/assets/facilities.jpg')",
