@@ -1,7 +1,49 @@
 "use client";
 
 import Image from "next/image";
-import { Fragment, useEffect, type FormEvent } from "react";
+import { Fragment, useEffect, useState, type FormEvent } from "react";
+
+function Skeleton({ className = "" }: { className?: string }) {
+  return (
+    <div className={`animate-pulse bg-gray-300 rounded ${className}`} />
+  );
+}
+
+function ModalVideo({ src }: { src: string }) {
+  const [loading, setLoading] = useState(true);
+  return (
+    <div className="relative w-full h-full md:min-h-[420px]">
+      {loading && <Skeleton className="absolute inset-0 w-full h-full rounded bg-gray-700" />}
+      <video
+        autoPlay
+        muted
+        loop
+        playsInline
+        onCanPlay={() => setLoading(false)}
+        className={`w-full rounded h-full object-cover transition-opacity duration-300 ${loading ? "opacity-0" : "opacity-100"}`}
+      >
+        <source src={src} type="video/mp4" />
+      </video>
+    </div>
+  );
+}
+
+function ModalImage({ src, alt, className }: { src: string; alt: string; className: string }) {
+  const [loading, setLoading] = useState(true);
+  return (
+    <>
+      {loading && <Skeleton className="absolute inset-0 w-full h-full" />}
+      <Image
+        src={src}
+        alt={alt}
+        fill
+        sizes="(max-width: 640px) 64vw, (max-width: 1024px) 42vw, 33vw"
+        onLoad={() => setLoading(false)}
+        className={`${className} transition-opacity duration-300 ${loading ? "opacity-0" : "opacity-100"}`}
+      />
+    </>
+  );
+}
 
 interface MotorcycleModalProps {
   isOpen: boolean;
@@ -77,11 +119,7 @@ export default function MotorcycleModal({
                       ${isOpen ? "opacity-100 translate-y-0" : "opacity-0 translate-y-2"}`}
         >
           {/* Video */}
-          {video && (
-            <video autoPlay muted loop playsInline className="w-full rounded h-full md:h-full md:min-h-[420px] object-cover">
-              <source src={video} type="video/mp4" />
-            </video>
-          )}
+          {video && <ModalVideo key={video} src={video} />}
         </div>
 
         {/* ------------------ COLUMN 2 (Details) ------------------ */}
@@ -100,8 +138,8 @@ export default function MotorcycleModal({
               <div className="grid grid-cols-2 gap-x-2 md:gap-x-4 gap-y-0.5 md:gap-y-1 text-[11px] sm:text-xs md:text-sm leading-tight">
                 {Object.entries(techSpecs).map(([key, value]) => (
                   <Fragment key={key}>
-                    <span className="font-semibold p-0.5 md:p-1 rounded hover:bg-gray-100 transition">{key}</span>
-                    <span className="p-0.5 md:p-1 rounded hover:bg-gray-100 transition">{value}</span>
+                    <span className="font-semibold p-0.5 md:p-1 rounded md:hover:bg-gray-100 transition">{key}</span>
+                    <span className="p-0.5 md:p-1 rounded md:hover:bg-gray-100 transition">{value}</span>
                   </Fragment>
                 ))}
               </div>
@@ -143,12 +181,11 @@ export default function MotorcycleModal({
             {/* Original block image */}
             {block && (
               <div className="relative w-full max-w-[300px] sm:max-w-[360px] md:max-w-full h-full min-h-[100px] sm:min-h-[120px] md:min-h-[210px] lg:min-h-[240px]">
-                <Image
+                <ModalImage
+                  key={block}
                   src={block}
                   alt={title}
-                  fill
-                  sizes="(max-width: 640px) 64vw, (max-width: 1024px) 42vw, 33vw"
-                  className="object-contain object-center scale-110 sm:scale-115 md:scale-100 lg:scale-105 hover:scale-[1.12] transition duration-300"
+                  className="object-contain object-center scale-110 sm:scale-115 md:scale-100 lg:scale-105 md:hover:scale-[1.12] will-change-transform"
                 />
               </div>
             )}
@@ -156,13 +193,11 @@ export default function MotorcycleModal({
             {/* Flipped duplicate below */}
             {block && (
               <div className="relative w-full max-w-[280px] sm:max-w-[340px] md:max-w-full h-full min-h-[90px] sm:min-h-[110px] md:min-h-[190px] lg:min-h-[220px] overflow-hidden -scale-x-100">
-                <Image
+                <ModalImage
+                  key={`${block}-flip`}
                   src={block}
                   alt={`${title} flipped`}
-                  fill
-                  sizes="(max-width: 640px) 60vw, (max-width: 1024px) 40vw, 32vw"
-                  className={`object-contain object-center scale-105 sm:scale-110 md:scale-95 lg:scale-100 opacity-50 sm:opacity-70
-                             drop-shadow-[0_4px_4px_rgba(0,0,0,0.2)] transition-all duration-500 delay-150`}
+                  className="object-contain object-center scale-105 sm:scale-110 md:scale-95 lg:scale-100 opacity-50 sm:opacity-70 drop-shadow-[0_4px_4px_rgba(0,0,0,0.2)]"
                 />
               </div>
             )}

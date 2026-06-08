@@ -135,7 +135,7 @@ export default function Showroom({ selectedBike, setSelectedBike }: ShowroomProp
         {bikes.map((bike, index) => (
           <div
             key={index}
-            className="w-72 hover:scale-105 transition cursor-pointer"
+            className="w-72 md:hover:scale-105 transition cursor-pointer will-change-transform"
             onClick={() => setSelectedBike(bike)}
           >
             <div className="relative w-full h-64 rounded-lg shadow-lg overflow-hidden">

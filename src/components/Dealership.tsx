@@ -25,7 +25,7 @@ export default function Dealership() {
 
       {/* ------------------ Map Card ------------------ */}
       <div className="relative z-10 flex justify-center">
-        <div className="w-full md:w-3/4 lg:w-2/3 aspect-video rounded-xl shadow-2xl overflow-hidden border border-red-600 hover:scale-105 transition-transform duration-500 bg-white/10 backdrop-blur-sm">
+        <div className="w-full md:w-3/4 lg:w-2/3 aspect-video rounded-xl shadow-2xl overflow-hidden border border-red-600 md:hover:scale-105 transition-transform duration-500 bg-white/10 backdrop-blur-sm">
           <iframe
             title="Ducati Philippines Dealers"
             src="https://maps.google.com/maps?width=1200&amp;height=720&amp;hl=en&amp;q=ducati philippines&amp;t=&amp;z=6&amp;ie=UTF8&amp;iwloc=B&amp;output=embed"
