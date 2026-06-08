@@ -25,10 +25,8 @@ export default function MotorcycleModal({
   // Handle page scroll lock while modal is open
   useEffect(() => {
     if (isOpen) {
-      // Stop background scrolling on desktop
-      if (window.innerWidth >= 768) {
-        document.body.style.overflow = "hidden";
-      }
+      // Stop background scrolling while the modal is open.
+      document.body.style.overflow = "hidden";
     } else {
       // Restore background scrolling when closing
       document.body.style.overflow = "auto";

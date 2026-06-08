@@ -15,3 +15,14 @@
 .animate-zoom {
 	animation: header-zoom 20s ease-in-out infinite;
 }
+
+@media (max-width: 767px) {
+	html,
+	body {
+		overflow-x: hidden;
+	}
+
+	.animate-zoom {
+		animation: none;
+	}
+}

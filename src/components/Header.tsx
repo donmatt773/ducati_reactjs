@@ -13,6 +13,7 @@ const videos = [
 export default function Header() {
   const [currentIndex, setCurrentIndex] = useState(0);
   const [fade, setFade] = useState(false);
+  const [isMobile, setIsMobile] = useState(false);
 
   const currentRef = useRef<HTMLVideoElement | null>(null);
   const nextRef = useRef<HTMLVideoElement | null>(null);
@@ -27,17 +28,31 @@ export default function Header() {
     }
   };
 
+  useEffect(() => {
+    const media = window.matchMedia("(max-width: 767px)");
+    const handleChange = () => setIsMobile(media.matches);
+
+    handleChange();
+    media.addEventListener("change", handleChange);
+
+    return () => media.removeEventListener("change", handleChange);
+  }, []);
+
   // Preload all videos
   useEffect(() => {
+    if (isMobile) return;
+
     videos.forEach((src) => {
       const video = document.createElement("video");
       video.src = src;
       video.preload = "auto";
     });
-  }, []);
+  }, [isMobile]);
 
   // Handle video end to switch to the next
   useEffect(() => {
+    if (isMobile) return;
+
     const currentVideo = currentRef.current;
     if (!currentVideo) return;
 
@@ -62,10 +77,10 @@ export default function Header() {
     currentVideo.addEventListener("ended", handleEnded);
 
     return () => currentVideo.removeEventListener("ended", handleEnded);
-  }, [currentIndex]);
+  }, [currentIndex, isMobile]);
 
   return (
-    <section className="relative h-screen flex items-center justify-center text-center text-white overflow-hidden">
+    <section className="relative min-h-[100svh] md:h-screen w-full max-w-full pt-24 md:pt-0 flex items-center justify-center text-center text-white overflow-hidden">
       {/* Current Video */}
       <video
         ref={currentRef}
@@ -73,28 +88,30 @@ export default function Header() {
         autoPlay
         muted
         playsInline
-        loop={false}
+        loop={isMobile}
         className={`absolute top-0 left-0 w-full h-full object-cover transition-opacity duration-1000 ${
           fade ? "opacity-0" : "opacity-100"
-        } animate-zoom`}
+        } ${isMobile ? "" : "animate-zoom"}`}
       >
-        <source src={videos[currentIndex]} type="video/mp4" />
+        <source src={videos[isMobile ? 0 : currentIndex]} type="video/mp4" />
       </video>
 
       {/* Next Video (for crossfade) */}
-      <video
-        ref={nextRef}
-        key={(currentIndex + 1) % videos.length}
-        autoPlay
-        muted
-        playsInline
-        loop={false}
-        className={`absolute top-0 left-0 w-full h-full object-cover transition-opacity duration-1000 ${
-          fade ? "opacity-100" : "opacity-0"
-        } animate-zoom`}
-      >
-        <source src={videos[(currentIndex + 1) % videos.length]} type="video/mp4" />
-      </video>
+      {!isMobile && (
+        <video
+          ref={nextRef}
+          key={(currentIndex + 1) % videos.length}
+          autoPlay
+          muted
+          playsInline
+          loop={false}
+          className={`absolute top-0 left-0 w-full h-full object-cover transition-opacity duration-1000 ${
+            fade ? "opacity-100" : "opacity-0"
+          } animate-zoom`}
+        >
+          <source src={videos[(currentIndex + 1) % videos.length]} type="video/mp4" />
+        </video>
+      )}
 
       {/* Dark overlay */}
       <div className="absolute top-0 left-0 w-full h-full bg-black/70"></div>

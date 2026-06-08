@@ -10,8 +10,12 @@ export default function BackToTop({ hide = false }: BackToTopProps) {
   const [visible, setVisible] = useState(false);
 
   useEffect(() => {
-    const toggle = () => setVisible(window.scrollY > 200);
-    window.addEventListener("scroll", toggle);
+    const toggle = () => {
+      const nextVisible = window.scrollY > 200;
+      setVisible((prevVisible) => (prevVisible === nextVisible ? prevVisible : nextVisible));
+    };
+
+    window.addEventListener("scroll", toggle, { passive: true });
     return () => window.removeEventListener("scroll", toggle);
   }, []);
 

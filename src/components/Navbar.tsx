@@ -9,10 +9,11 @@ export default function Navbar() {
 
   useEffect(() => {
     const handleScroll = () => {
-      setSticky(window.scrollY > 20);
+      const nextSticky = window.scrollY > 20;
+      setSticky((prevSticky) => (prevSticky === nextSticky ? prevSticky : nextSticky));
     };
 
-    window.addEventListener("scroll", handleScroll);
+    window.addEventListener("scroll", handleScroll, { passive: true });
     return () => window.removeEventListener("scroll", handleScroll);
   }, []);
 
